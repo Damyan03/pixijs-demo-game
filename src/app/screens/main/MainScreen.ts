@@ -50,6 +50,9 @@ export class MainScreen extends Container {
     this.plate.position.set(-700, 0);
     this.mainContainer.addChild(this.plate);
 
+    const password = this.generatePassword();
+    console.log("Generated password:", password);
+
     // const buttonAnimations = {
     //   hover: {
     //     props: {
@@ -64,6 +67,17 @@ export class MainScreen extends Container {
     //     duration: 100,
     //   },
     // };
+  }
+
+  private generatePassword(): number[] {
+    const password: number[] = [];
+    while (password.length < 6) {
+      const randomNumber = Math.floor(Math.random() * 6);
+      if (!password.includes(randomNumber)) {
+        password.push(randomNumber);
+      }
+    }
+    return password;
   }
 
   /** Prepare the screen just before showing */
