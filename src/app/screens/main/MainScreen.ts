@@ -1,10 +1,7 @@
-import { animate } from "motion";
-import type { AnimationPlaybackControls } from "motion/react";
-import { Sprite, Ticker } from "pixi.js";
+import { Sprite } from "pixi.js";
 import { Container, RenderLayer, Texture } from "pixi.js";
 import { waitFor } from "../../../engine/utils/waitFor";
 
-import { engine } from "../../getEngine";
 import { Cage } from "../../game-objects/Cage";
 import { Tiger } from "../../game-objects/Tiger";
 import { Background } from "../../game-objects/Background";
@@ -22,7 +19,6 @@ export class MainScreen extends Container {
   private background: Background;
   private cage: Cage;
   private tiger: Tiger;
-  private paused = false;
   private plate: Plate;
   private winText: Sprite;
 
@@ -118,30 +114,6 @@ export class MainScreen extends Container {
     this.resetGame();
   }
 
-  /** Prepare the screen just before showing */
-  public prepare() {}
-
-  /** Update the screen */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public update(_time: Ticker) {
-    if (this.paused) return;
-  }
-
-  /** Pause gameplay - automatically fired when a popup is presented */
-  public async pause() {
-    this.mainContainer.interactiveChildren = false;
-    this.paused = true;
-  }
-
-  /** Resume gameplay */
-  public async resume() {
-    this.mainContainer.interactiveChildren = true;
-    this.paused = false;
-  }
-
-  /** Fully reset */
-  public reset() {}
-
   /** Resize the screen, fired whenever window size changes */
   public resize(width: number, height: number) {
     const centerX = width * 0.5;
@@ -153,28 +125,4 @@ export class MainScreen extends Container {
     this.mainContainer.scale.set(Math.min(width / 1920, height / 1080));
     this.background.resize(width, height);
   }
-
-  /** Show screen with animations */
-  public async show(): Promise<void> {
-    engine().audio.bgm.play("main/sounds/bgm-main.mp3", { volume: 0.5 });
-
-    const elementsToAnimate = [this.mainContainer
-    ];
-
-    let finalPromise!: AnimationPlaybackControls;
-    for (const element of elementsToAnimate) {
-      element.alpha = 0;
-      finalPromise = animate(
-        element,
-        { alpha: 1 },
-        { duration: 0.3, delay: 0.75, ease: "backOut" },
-      );
-    }
-
-    await finalPromise;
-  }
-
-  /** Hide screen with animations */
-  public async hide() {}
-
 }
