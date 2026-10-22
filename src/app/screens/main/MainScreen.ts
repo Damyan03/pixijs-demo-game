@@ -37,7 +37,6 @@ export class MainScreen extends Container {
     this.addChild(this.mainContainer);
 
     this.cage = new Cage((bar: Bar) => this.onBarOpen(bar))
-    this.resetGame();
     this.mainContainer.addChild(this.cage);
 
     this.tiger = new Tiger();
@@ -54,6 +53,8 @@ export class MainScreen extends Container {
     this.plate.scale.set(0.4);
     this.plate.position.set(-700, 0);
     this.mainContainer.addChild(this.plate);
+
+    this.resetGame();
 
     // const buttonAnimations = {
     //   hover: {
@@ -75,6 +76,7 @@ export class MainScreen extends Container {
     this.password = this.generatePassword();
     this.step = 0;
     this.cage.resetBars();
+    this.plate.setBarsRemaining(this.password.length);
     console.log(`Password: ${this.password.map((number) => number+1)}`)
   }
 
@@ -96,6 +98,7 @@ export class MainScreen extends Container {
     }
 
     this.step++;
+    this.plate.setBarsRemaining(this.password.length - this.step);
     if (this.step === this.password.length) console.log("Unlocked!");
   }
 
