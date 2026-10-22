@@ -10,7 +10,7 @@ export class Plate extends GameObject {
 
         this.barsRemainingLabel = new Label({
             text: "",
-            style: {fontSize: 125, fill: `#FFFFFF`}
+            style: {fontSize: 125, fill: `#FFFFFF`, stroke: { color: "#000000", width: 20 }}
         })
         this.addChild(this.barsRemainingLabel)
     }

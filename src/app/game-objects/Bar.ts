@@ -1,6 +1,7 @@
 import { Sprite, Texture } from "pixi.js";
 import { InteractableObject } from "./InteractableObject";
 import gsap from "gsap";
+import { Label } from "../ui/Label";
 
 export class Bar extends InteractableObject {
 
@@ -8,6 +9,7 @@ export class Bar extends InteractableObject {
     public readonly id: number;
     public isTapped: boolean = false;
     private shadow: Sprite;
+    private barLabel: Label;
 
     private readonly onBarOpen: (bar: Bar) => void;
 
@@ -20,6 +22,14 @@ export class Bar extends InteractableObject {
         //flips the sprite for the right side of the cage
         if (inverted) { this.sprite.scale.x *= -1;}
         this.onBarOpen = onOpen;
+
+        //bar numbers
+        this.barLabel = new Label({
+            text: `${this.id + 1}`,
+            style: { fontSize: 120, fill: "#FFFFFF", stroke: { color: "#000000", width: 20 } },
+        });
+        this.barLabel.x = (this.sprite.width - 40) * this.direction;
+        this.addChild(this.barLabel);
         
         //bar shadow
         this.shadow = new Sprite(Texture.from("barShadow.png"));
