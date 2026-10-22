@@ -1,4 +1,4 @@
-import { Texture } from "pixi.js";
+import { Sprite, Texture } from "pixi.js";
 import { InteractableObject } from "./InteractableObject";
 import gsap from "gsap";
 
@@ -7,6 +7,7 @@ export class Bar extends InteractableObject {
     private readonly direction: number;
     public readonly id: number;
     public isTapped: boolean = false;
+    private shadow: Sprite;
 
     private readonly onBarOpen: (bar: Bar) => void;
 
@@ -19,6 +20,13 @@ export class Bar extends InteractableObject {
         //flips the sprite for the right side of the cage
         if (inverted) { this.sprite.scale.x *= -1;}
         this.onBarOpen = onOpen;
+        
+        //bar shadow
+        this.shadow = new Sprite(Texture.from("barShadow.png"));
+        this.shadow.anchor.copyFrom(this.sprite.anchor);
+        this.shadow.scale.copyFrom(this.sprite.scale);
+        this.shadow.position.set(0, 10);
+        this.addChildAt(this.shadow, 0);
     }
 
     protected onTap(): void {
