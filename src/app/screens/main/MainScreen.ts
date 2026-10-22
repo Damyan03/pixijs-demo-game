@@ -29,14 +29,14 @@ export class MainScreen extends Container {
 
   constructor() {
     super();
-    
+
     this.background = new Background();
     this.addChild(this.background);
 
     this.mainContainer = new Container();
     this.addChild(this.mainContainer);
 
-    this.cage = new Cage((bar: Bar) => this.onBarOpen(bar))
+    this.cage = new Cage((bar: Bar) => this.onBarOpen(bar));
     this.mainContainer.addChild(this.cage);
 
     this.plate = new Plate();
@@ -49,7 +49,7 @@ export class MainScreen extends Container {
     this.tiger.position.set(0, 70);
     this.mainContainer.addChild(this.tiger);
 
-    this.winText = new Sprite(Texture.from("txt.png"))
+    this.winText = new Sprite(Texture.from("txt.png"));
     this.winText.scale.set(0);
     this.winText.anchor.set(0.5);
     this.winText.position.set(0, 350);
@@ -75,7 +75,7 @@ export class MainScreen extends Container {
     this.winText.scale.set(0);
 
     console.log(`Password: ${this.password.map((number) => number + 1)}`);
-}
+  }
 
   private generatePassword(): number[] {
     const password: number[] = [];
@@ -89,7 +89,7 @@ export class MainScreen extends Container {
   }
 
   private onBarOpen(bar: Bar) {
-    if (bar.id !== this.password[this.step]){
+    if (bar.id !== this.password[this.step]) {
       this.resetGame();
       return;
     }
@@ -104,10 +104,10 @@ export class MainScreen extends Container {
 
     // let the last bar finish sliding
     await waitFor(0.5);
-    
+
     this.frontLayer.attach(this.tiger, this.winText);
     await this.tiger.leap();
-    await gsap.to(this.winText.scale, { duration: 0.4, x: 0.65, y: 0.65});
+    await gsap.to(this.winText.scale, { duration: 0.4, x: 0.65, y: 0.65 });
 
     //reset game after 5s
     await waitFor(5);
