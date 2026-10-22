@@ -1,7 +1,8 @@
 import { animate } from "motion";
 import type { AnimationPlaybackControls } from "motion/react";
-import type { Ticker } from "pixi.js";
-import { Container, RenderLayer } from "pixi.js";
+import { Sprite, Ticker } from "pixi.js";
+import { Container, RenderLayer, Texture } from "pixi.js";
+import { waitFor } from "../../../engine/utils/waitFor";
 
 import { engine } from "../../getEngine";
 import { Cage } from "../../game-objects/Cage";
@@ -9,6 +10,8 @@ import { Tiger } from "../../game-objects/Tiger";
 import { Background } from "../../game-objects/Background";
 import { Plate } from "../../game-objects/Plate";
 import { Bar } from "../../game-objects/Bar";
+
+import gsap from "gsap";
 
 /** The screen that holds the app */
 export class MainScreen extends Container {
@@ -21,6 +24,7 @@ export class MainScreen extends Container {
   private tiger: Tiger;
   private paused = false;
   private plate: Plate;
+  private winText: Sprite;
 
   private password: number[] = [];
   private step: number = 0;
@@ -39,37 +43,28 @@ export class MainScreen extends Container {
     this.cage = new Cage((bar: Bar) => this.onBarOpen(bar))
     this.mainContainer.addChild(this.cage);
 
+    this.plate = new Plate();
+    this.plate.scale.set(0.4);
+    this.plate.position.set(-700, 0);
+    this.mainContainer.addChild(this.plate);
+
     this.tiger = new Tiger();
     this.tiger.scale.set(0.4);
     this.tiger.position.set(0, 70);
     this.mainContainer.addChild(this.tiger);
+
+    this.winText = new Sprite(Texture.from("txt.png"))
+    this.winText.scale.set(0);
+    this.winText.anchor.set(0.5);
+    this.winText.position.set(0, 350);
+    this.mainContainer.addChild(this.winText);
 
     //renders the bars in front of the tiger
     this.frontLayer = new RenderLayer();
     this.mainContainer.addChild(this.frontLayer);
     this.frontLayer.attach(...this.cage.bars);
 
-    this.plate = new Plate();
-    this.plate.scale.set(0.4);
-    this.plate.position.set(-700, 0);
-    this.mainContainer.addChild(this.plate);
-
     this.resetGame();
-
-    // const buttonAnimations = {
-    //   hover: {
-    //     props: {
-    //       scale: { x: 1.1, y: 1.1 },
-    //     },
-    //     duration: 100,
-    //   },
-    //   pressed: {
-    //     props: {
-    //       scale: { x: 0.9, y: 0.9 },
-    //     },
-    //     duration: 100,
-    //   },
-    // };
   }
 
   private resetGame() {
@@ -77,8 +72,14 @@ export class MainScreen extends Container {
     this.step = 0;
     this.cage.resetBars();
     this.plate.setBarsRemaining(this.password.length);
-    console.log(`Password: ${this.password.map((number) => number+1)}`)
-  }
+
+    this.frontLayer.detach(this.tiger);
+    this.tiger.position.set(0, 70);
+    this.tiger.scale.set(0.4);
+    this.winText.scale.set(0);
+
+    console.log(`Password: ${this.password.map((number) => number + 1)}`);
+}
 
   private generatePassword(): number[] {
     const password: number[] = [];
@@ -99,7 +100,22 @@ export class MainScreen extends Container {
 
     this.step++;
     this.plate.setBarsRemaining(this.password.length - this.step);
-    if (this.step === this.password.length) console.log("Unlocked!");
+    if (this.step === this.password.length) this.win();
+  }
+
+  private async win() {
+    console.log("Unlocked!");
+
+    // let the last bar finish sliding
+    await waitFor(0.5);
+    
+    this.frontLayer.attach(this.tiger);
+    await this.tiger.leap();
+    await gsap.to(this.winText.scale, { duration: 0.4, x: 0.65, y: 0.65});
+
+    //reset game after 5s
+    await waitFor(5);
+    this.resetGame();
   }
 
   /** Prepare the screen just before showing */
