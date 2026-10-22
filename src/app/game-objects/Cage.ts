@@ -9,12 +9,12 @@ export class Cage extends GameObject {
         super(Texture.from("cage.png"));
         this.scale.set(0.65);
         
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 2; j++) {
-                const bar = new Bar(j === 1);
+        for (let j = 0; j < 2; j++) {
+            for (let i = 0; i < 3; i++) {
+                const bar = new Bar(j === 1, j * 3 + i);
                 this.bars.push(bar);
-                this.bars[i * 2 + j].x = j;
-                this.bars[i * 2 + j].y = 200 * i - 150;
+                bar.x = j;
+                bar.y = 200 * i - 150;
                 this.addChild(bar);
             }
         }

@@ -1,7 +1,7 @@
 import { animate } from "motion";
 import type { AnimationPlaybackControls } from "motion/react";
 import type { Ticker } from "pixi.js";
-import { Container, RenderLayer, Texture } from "pixi.js";
+import { Container, RenderLayer } from "pixi.js";
 
 import { engine } from "../../getEngine";
 import { Cage } from "../../game-objects/Cage";
