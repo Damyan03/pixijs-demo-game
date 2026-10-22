@@ -8,6 +8,7 @@ import { Cage } from "../../game-objects/Cage";
 import { Tiger } from "../../game-objects/Tiger";
 import { Background } from "../../game-objects/Background";
 import { Plate } from "../../game-objects/Plate";
+import { Bar } from "../../game-objects/Bar";
 
 /** The screen that holds the app */
 export class MainScreen extends Container {
@@ -21,6 +22,9 @@ export class MainScreen extends Container {
   private paused = false;
   private plate: Plate;
 
+  private password: number[] = [];
+  private step: number = 0;
+
   private frontLayer: RenderLayer;
 
   constructor() {
@@ -32,7 +36,8 @@ export class MainScreen extends Container {
     this.mainContainer = new Container();
     this.addChild(this.mainContainer);
 
-    this.cage = new Cage();
+    this.cage = new Cage((bar: Bar) => this.onBarOpen(bar))
+    this.resetGame();
     this.mainContainer.addChild(this.cage);
 
     this.tiger = new Tiger();
@@ -50,9 +55,6 @@ export class MainScreen extends Container {
     this.plate.position.set(-700, 0);
     this.mainContainer.addChild(this.plate);
 
-    const password = this.generatePassword();
-    console.log("Generated password:", password);
-
     // const buttonAnimations = {
     //   hover: {
     //     props: {
@@ -69,6 +71,13 @@ export class MainScreen extends Container {
     // };
   }
 
+  private resetGame() {
+    this.password = this.generatePassword();
+    this.step = 0;
+    this.cage.resetBars();
+    console.log(`Password: ${this.password.map((number) => number+1)}`)
+  }
+
   private generatePassword(): number[] {
     const password: number[] = [];
     while (password.length < 6) {
@@ -78,6 +87,16 @@ export class MainScreen extends Container {
       }
     }
     return password;
+  }
+
+  private onBarOpen(bar: Bar) {
+    if (bar.id !== this.password[this.step]){
+      this.resetGame();
+      return;
+    }
+
+    this.step++;
+    if (this.step === this.password.length) console.log("Unlocked!");
   }
 
   /** Prepare the screen just before showing */
