@@ -73,7 +73,7 @@ export class MainScreen extends Container {
     this.cage.resetBars();
     this.plate.setBarsRemaining(this.password.length);
 
-    this.frontLayer.detach(this.tiger);
+    this.frontLayer.detach(this.tiger, this.winText);
     this.tiger.position.set(0, 70);
     this.tiger.scale.set(0.4);
     this.winText.scale.set(0);
@@ -109,7 +109,7 @@ export class MainScreen extends Container {
     // let the last bar finish sliding
     await waitFor(0.5);
     
-    this.frontLayer.attach(this.tiger);
+    this.frontLayer.attach(this.tiger, this.winText);
     await this.tiger.leap();
     await gsap.to(this.winText.scale, { duration: 0.4, x: 0.65, y: 0.65});
 
