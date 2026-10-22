@@ -47,3 +47,9 @@ I used the PixiJS DevTools browser extension for part of the troubleshooting.
 ## AI usage
 
 This is a project for learning and understanding. I wrote the code myself and used AI (ChatGPT, Claude Code) as a learning aid: to explain how PixiJS works, to help with specific syntax, and to review and debug my code. Some snippets come from its suggestions. This README was drafted with AI from my notes.
+
+## Screenshots
+
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/4d1cf985-dcbc-4571-90f3-45406ddb5986" />
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/b8a6dc6f-479c-4769-84f3-1c9ece91736b" />
+
