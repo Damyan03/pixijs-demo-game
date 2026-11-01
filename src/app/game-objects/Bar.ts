@@ -18,6 +18,7 @@ export class Bar extends InteractableObject {
     this.id = id;
     this.sprite.scale.set(2.3);
     this.sprite.anchor.set(1, 0.5);
+    this.cursor = "pointer";
     //flips the sprite for the right side of the cage
     if (inverted) {
       this.sprite.scale.x *= -1;
