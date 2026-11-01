@@ -1,6 +1,9 @@
 import { Texture } from "pixi.js";
 import { GameObject } from "./GameObject";
 import gsap from "gsap";
+import config from "../gameConfig.json";
+
+const { home, leap, moveDuration } = config.tiger;
 
 export class Tiger extends GameObject {
   constructor() {
@@ -9,15 +12,15 @@ export class Tiger extends GameObject {
 
   public async leap() {
     await Promise.all([
-      gsap.to(this.position, { duration: 0.6, x: 74, y: -130 }),
-      gsap.to(this.scale, { duration: 0.6, x: 1, y: 1 }),
+      gsap.to(this.position, { duration: moveDuration, x: leap.x, y: leap.y }),
+      gsap.to(this.scale, { duration: moveDuration, x: leap.scale, y: leap.scale, }),
     ]);
   }
 
   public async returnToCage() {
     await Promise.all([
-      gsap.to(this.position, { duration: 0.6, x: 0, y: 70 }),
-      gsap.to(this.scale, { duration: 0.6, x: 0.4, y: 0.4 }),
+      gsap.to(this.position, { duration: moveDuration, x: home.x, y: home.y }),
+      gsap.to(this.scale, { duration: moveDuration, x: home.scale, y: home.scale }),
     ]);
   }
 }

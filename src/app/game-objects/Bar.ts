@@ -2,6 +2,7 @@ import { Sprite, Texture } from "pixi.js";
 import { InteractableObject } from "./InteractableObject";
 import gsap from "gsap";
 import { Label } from "../ui/Label";
+import config from "../gameConfig.json";
 
 export class Bar extends InteractableObject {
   private readonly direction: number;
@@ -16,7 +17,7 @@ export class Bar extends InteractableObject {
     super(Texture.from("bar.png"));
     this.direction = inverted ? 1 : -1;
     this.id = id;
-    this.sprite.scale.set(2.3);
+    this.sprite.scale.set(config.bar.scale);
     this.sprite.anchor.set(1, 0.5);
     this.cursor = "pointer";
     //flips the sprite for the right side of the cage
@@ -28,20 +29,16 @@ export class Bar extends InteractableObject {
     //bar numbers
     this.barLabel = new Label({
       text: `${this.id + 1}`,
-      style: {
-        fontSize: 120,
-        fill: "#FFFFFF",
-        stroke: { color: "#000000", width: 20 },
-      },
+      style: config.bar.labelStyle,
     });
-    this.barLabel.x = (this.sprite.width - 40) * this.direction;
+    this.barLabel.x = (this.sprite.width - config.bar.labelInset) * this.direction;
     this.addChild(this.barLabel);
 
     //bar shadow
     this.shadow = new Sprite(Texture.from("barShadow.png"));
     this.shadow.anchor.copyFrom(this.sprite.anchor);
     this.shadow.scale.copyFrom(this.sprite.scale);
-    this.shadow.position.set(0, 10);
+    this.shadow.position.set(0, config.bar.shadowOffsetY);
     this.addChildAt(this.shadow, 0);
   }
 
@@ -52,11 +49,11 @@ export class Bar extends InteractableObject {
 
   public async open() {
     this.isOpen = true;
-    await gsap.to(this, { duration: 0.5, x: 350 * this.direction });
+    await gsap.to(this, { duration: config.bar.openDuration, x: config.bar.openDistance * this.direction });
   }
 
   public async close() {
     this.isOpen = false;
-    await gsap.to(this, { duration: 0.5, x: 0, overwrite: "auto" });
+    await gsap.to(this, { duration: config.bar.closeDuration, x: 0, overwrite: "auto" });
   }
 }

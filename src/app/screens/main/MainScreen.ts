@@ -9,6 +9,7 @@ import { Plate } from "../../game-objects/Plate";
 import { Bar } from "../../game-objects/Bar";
 
 import gsap from "gsap";
+import config from "../../gameConfig.json";
 
 type GameState = "playing" | "resetting" | "won";
 
@@ -44,19 +45,19 @@ export class MainScreen extends Container {
     this.mainContainer.addChild(this.cage);
 
     this.plate = new Plate();
-    this.plate.scale.set(0.4);
-    this.plate.position.set(-700, 0);
+    this.plate.scale.set(config.plate.scale);
+    this.plate.position.set(config.plate.x, config.plate.y);
     this.mainContainer.addChild(this.plate);
 
     this.tiger = new Tiger();
-    this.tiger.scale.set(0.4);
-    this.tiger.position.set(0, 70);
+    this.tiger.scale.set(config.tiger.home.scale);
+    this.tiger.position.set(config.tiger.home.x, config.tiger.home.y);
     this.mainContainer.addChild(this.tiger);
 
     this.winText = new Sprite(Texture.from("txt.png"));
     this.winText.scale.set(0);
     this.winText.anchor.set(0.5);
-    this.winText.position.set(0, 350);
+    this.winText.position.set(config.winText.x, config.winText.y);
     this.mainContainer.addChild(this.winText);
 
     //renders the bars in front of the tiger
@@ -86,8 +87,9 @@ export class MainScreen extends Container {
 
   private generatePassword(): number[] {
     const password: number[] = [];
-    while (password.length < 6) {
-      const randomNumber = Math.floor(Math.random() * 6);
+    const barCount = this.cage.bars.length;
+    while (password.length < barCount) {
+      const randomNumber = Math.floor(Math.random() * barCount);
       if (!password.includes(randomNumber)) {
         password.push(randomNumber);
       }
@@ -97,7 +99,7 @@ export class MainScreen extends Container {
 
   private onBarTap(bar: Bar) {
     if (bar.isOpen) return;
-    
+
     if (bar.id !== this.password[this.step]) {
       this.resetGame();
       return;
@@ -119,12 +121,12 @@ export class MainScreen extends Container {
 
     this.frontLayer.attach(this.tiger, this.winText);
     await this.tiger.leap();
-    await gsap.to(this.winText.scale, { duration: 0.4, x: 0.65, y: 0.65 });
+    await gsap.to(this.winText.scale, { duration: config.winText.showDuration, x: config.winText.scale, y: config.winText.scale });
 
-    //reset game after 5s
-    await waitFor(5);
-    
-    await gsap.to(this.winText.scale, { duration: 0.4, x: 0, y: 0 });
+    //hold the win screen before resetting
+    await waitFor(config.winText.holdDuration);
+
+    await gsap.to(this.winText.scale, { duration: config.winText.hideDuration, x: 0, y: 0 });
     await this.tiger.returnToCage();
     this.frontLayer.detach(this.tiger, this.winText);
 
@@ -139,7 +141,8 @@ export class MainScreen extends Container {
     this.mainContainer.x = centerX;
     this.mainContainer.y = centerY;
 
-    this.mainContainer.scale.set(Math.min(width / 1920, height / 1080));
+    const { gameSize } = config;
+    this.mainContainer.scale.set(Math.min(width / gameSize.width, height / gameSize.height));
     this.background.resize(width, height);
   }
 }

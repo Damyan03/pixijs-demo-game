@@ -1,0 +1,45 @@
+{
+  "gameSize": { "width": 1920, "height": 1080 },
+  "cage": {
+    "scale": 0.65,
+    "barsPerSide": 3,
+    "firstBarY": -150,
+    "barSpacing": 200
+  },
+  "bar": {
+    "scale": 2.3,
+    "openDistance": 350,
+    "openDuration": 0.5,
+    "closeDuration": 0.5,
+    "shadowOffsetY": 10,
+    "labelInset": 40,
+    "labelStyle": {
+      "fontSize": 120,
+      "fill": "#FFFFFF",
+      "stroke": { "color": "#000000", "width": 20 }
+    }
+  },
+  "plate": {
+    "x": -700,
+    "y": 0,
+    "scale": 0.4,
+    "labelStyle": {
+      "fontSize": 125,
+      "fill": "#FFFFFF",
+      "stroke": { "color": "#000000", "width": 20 }
+    }
+  },
+  "tiger": {
+    "home": { "x": 0, "y": 70, "scale": 0.4 },
+    "leap": { "x": 74, "y": -130, "scale": 1 },
+    "moveDuration": 0.6
+  },
+  "winText": {
+    "x": 0,
+    "y": 350,
+    "scale": 0.65,
+    "showDuration": 0.4,
+    "hideDuration": 0.4,
+    "holdDuration": 5
+  }
+}

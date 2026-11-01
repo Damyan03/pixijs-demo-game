@@ -1,6 +1,7 @@
 import { Texture } from "pixi.js";
 import { GameObject } from "./GameObject";
 import { Label } from "../ui/Label";
+import config from "../gameConfig.json";
 
 export class Plate extends GameObject {
   private barsRemainingLabel: Label;
@@ -10,11 +11,7 @@ export class Plate extends GameObject {
 
     this.barsRemainingLabel = new Label({
       text: "",
-      style: {
-        fontSize: 125,
-        fill: `#FFFFFF`,
-        stroke: { color: "#000000", width: 20 },
-      },
+      style: config.plate.labelStyle,
     });
     this.addChild(this.barsRemainingLabel);
   }
