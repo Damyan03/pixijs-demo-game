@@ -25,8 +25,21 @@ All game objects are in `src/app/game-objects/`.
 | `Cage` | Shows the cage and creates the six bars (1–3 left, 4–6 right, top to bottom). |
 | `Tiger` | The tiger. `leap()` animates it out of the cage. |
 | `Plate` | The meter. Shows how many bars are still locked. |
-| `Background` | Scales to cover the whole window. |
-| `MainScreen` | Builds the scene and holds the game rules. It generates the code, checks each bar, plays the win sequence and resets. It also scales the scene to fit the window. |
+| `Background` | Sits behind the game and scales with it. Grows when the window is taller than the image. |
+| `MainScreen` | Builds the scene and holds the game rules. It generates the code, checks each bar, plays the win sequence and resets. It also applies the layout when the window is resized. |
+
+## Resizing
+
+`computeLayout` in `src/app/screens/main/layout.ts` works out the scene's layout for a window size. Its settings are in `gameConfig.json`.
+
+| Window | What happens |
+| --- | --- |
+| Wider than 16:9 | The game fills the width, so the top and bottom crop. |
+| Narrowing from 16:9 | The sides of the background crop and the cage shifts right to keep the plate on screen. The plate then slides toward the cage. |
+| Narrower than the side layout fits | The game shrinks and the background grows to keep covering the window. |
+| Tall and narrow | The plate moves above the cage. |
+
+The tiger and win text are centered in the window and sized to fit it when the win starts.
 
 ## Development notes
 
