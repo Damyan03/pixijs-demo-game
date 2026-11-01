@@ -40,7 +40,7 @@ export class MainScreen extends Container {
     this.mainContainer = new Container();
     this.addChild(this.mainContainer);
 
-    this.cage = new Cage((bar: Bar) => this.onBarOpen(bar));
+    this.cage = new Cage((bar: Bar) => this.onBarTap(bar));
     this.mainContainer.addChild(this.cage);
 
     this.plate = new Plate();
@@ -95,7 +95,9 @@ export class MainScreen extends Container {
     return password;
   }
 
-  private onBarOpen(bar: Bar) {
+  private onBarTap(bar: Bar) {
+    if (bar.isOpen) return;
+    
     if (bar.id !== this.password[this.step]) {
       this.resetGame();
       return;
@@ -103,15 +105,17 @@ export class MainScreen extends Container {
 
     this.step++;
     this.plate.setBarsRemaining(this.password.length - this.step);
-    if (this.step === this.password.length) this.win();
+
+    if (this.step === this.password.length) this.win(bar);
+    else bar.open();
   }
 
-  private async win() {
+  private async win(lastBar: Bar) {
     console.log("Unlocked!");
     this.setState("won");
 
     // let the last bar finish sliding
-    await waitFor(0.5);
+    await lastBar.open();
 
     this.frontLayer.attach(this.tiger, this.winText);
     await this.tiger.leap();

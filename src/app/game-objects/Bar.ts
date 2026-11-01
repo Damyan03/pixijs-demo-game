@@ -6,13 +6,13 @@ import { Label } from "../ui/Label";
 export class Bar extends InteractableObject {
   private readonly direction: number;
   public readonly id: number;
-  public isTapped: boolean = false;
+  public isOpen: boolean = false;
   private shadow: Sprite;
   private barLabel: Label;
 
-  private readonly onBarOpen: (bar: Bar) => void;
+  private readonly onBarTap: (bar: Bar) => void;
 
-  constructor(inverted: boolean, id: number, onOpen: (bar: Bar) => void) {
+  constructor(inverted: boolean, id: number, onBarTap: (bar: Bar) => void) {
     super(Texture.from("bar.png"));
     this.direction = inverted ? 1 : -1;
     this.id = id;
@@ -23,7 +23,7 @@ export class Bar extends InteractableObject {
     if (inverted) {
       this.sprite.scale.x *= -1;
     }
-    this.onBarOpen = onOpen;
+    this.onBarTap = onBarTap;
 
     //bar numbers
     this.barLabel = new Label({
@@ -46,15 +46,17 @@ export class Bar extends InteractableObject {
   }
 
   protected onTap(): void {
-    if (this.isTapped) return;
-    this.isTapped = true;
     console.log(`Bar ${this.id + 1} tapped!`);
-    gsap.to(this, { duration: 0.5, x: this.x + 350 * this.direction });
-    this.onBarOpen(this);
+    this.onBarTap(this);
   }
 
-  public async resetBar() {
-    this.isTapped = false;
-    await gsap.to(this, { duration: 0.5, x: 0 });
+  public async open() {
+    this.isOpen = true;
+    await gsap.to(this, { duration: 0.5, x: 350 * this.direction });
+  }
+
+  public async close() {
+    this.isOpen = false;
+    await gsap.to(this, { duration: 0.5, x: 0, overwrite: "auto" });
   }
 }
