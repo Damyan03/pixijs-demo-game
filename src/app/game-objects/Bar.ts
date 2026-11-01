@@ -49,11 +49,13 @@ export class Bar extends InteractableObject {
 
   public async open() {
     this.isOpen = true;
+    this.cursor = "default";
     await gsap.to(this, { duration: config.bar.openDuration, x: config.bar.openDistance * this.direction });
   }
 
   public async close() {
     this.isOpen = false;
+    this.cursor = "pointer";
     await gsap.to(this, { duration: config.bar.closeDuration, x: 0, overwrite: "auto" });
   }
 }
