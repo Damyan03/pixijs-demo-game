@@ -69,11 +69,6 @@ export class MainScreen extends Container {
     this.cage.resetBars();
     this.plate.setBarsRemaining(this.password.length);
 
-    this.frontLayer.detach(this.tiger, this.winText);
-    this.tiger.position.set(0, 70);
-    this.tiger.scale.set(0.4);
-    this.winText.scale.set(0);
-
     console.log(`Password: ${this.password.map((number) => number + 1)}`);
   }
 
@@ -111,6 +106,11 @@ export class MainScreen extends Container {
 
     //reset game after 5s
     await waitFor(5);
+    
+    await gsap.to(this.winText.scale, { duration: 0.4, x: 0, y: 0 });
+    await this.tiger.returnToCage();
+    this.frontLayer.detach(this.tiger, this.winText);
+
     this.resetGame();
   }
 

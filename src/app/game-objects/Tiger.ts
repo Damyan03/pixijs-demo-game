@@ -13,4 +13,11 @@ export class Tiger extends GameObject {
       gsap.to(this.scale, { duration: 0.6, x: 1, y: 1 }),
     ]);
   }
+
+  public async returnToCage() {
+    await Promise.all([
+      gsap.to(this.position, { duration: 0.6, x: 0, y: 70 }),
+      gsap.to(this.scale, { duration: 0.6, x: 0.4, y: 0.4 }),
+    ]);
+  }
 }
