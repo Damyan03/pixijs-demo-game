@@ -10,6 +10,8 @@ import { Bar } from "../../game-objects/Bar";
 
 import gsap from "gsap";
 
+type GameState = "playing" | "resetting" | "won";
+
 /** The screen that holds the app */
 export class MainScreen extends Container {
   /** Assets bundles required by this screen */
@@ -24,6 +26,8 @@ export class MainScreen extends Container {
 
   private password: number[] = [];
   private step: number = 0;
+
+  private state: GameState = "resetting";
 
   private frontLayer: RenderLayer;
 
@@ -62,14 +66,22 @@ export class MainScreen extends Container {
 
     this.resetGame();
   }
+  
+  private setState(state: GameState) {
+    this.state = state;
+    //bars only accept input while playing
+    this.cage.setInteractive(this.state === "playing");
+  }
 
-  private resetGame() {
+  private async resetGame() {
+    this.setState("resetting");
     this.password = this.generatePassword();
     this.step = 0;
-    this.cage.resetBars();
     this.plate.setBarsRemaining(this.password.length);
 
     console.log(`Password: ${this.password.map((number) => number + 1)}`);
+    await this.cage.resetBars();
+    this.setState("playing");
   }
 
   private generatePassword(): number[] {
@@ -96,6 +108,7 @@ export class MainScreen extends Container {
 
   private async win() {
     console.log("Unlocked!");
+    this.setState("won");
 
     // let the last bar finish sliding
     await waitFor(0.5);

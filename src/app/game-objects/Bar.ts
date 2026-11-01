@@ -46,16 +46,15 @@ export class Bar extends InteractableObject {
   }
 
   protected onTap(): void {
-    if (!this.isTapped) {
-      this.isTapped = true;
-      gsap.to(this, { duration: 0.5, x: this.x + 350 * this.direction });
-      this.onBarOpen(this);
-      console.log(`Bar ${this.id + 1} tapped!`);
-    }
+    if (this.isTapped) return;
+    this.isTapped = true;
+    console.log(`Bar ${this.id + 1} tapped!`);
+    gsap.to(this, { duration: 0.5, x: this.x + 350 * this.direction });
+    this.onBarOpen(this);
   }
 
-  public resetBar() {
+  public async resetBar() {
     this.isTapped = false;
-    gsap.to(this, { duration: 0.5, x: 0 });
+    await gsap.to(this, { duration: 0.5, x: 0 });
   }
 }

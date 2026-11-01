@@ -19,7 +19,11 @@ export class Cage extends GameObject {
     }
   }
 
-  public resetBars() {
-    this.bars.forEach((bar) => bar.resetBar());
+  public async resetBars() {
+    await Promise.all(this.bars.map((bar) => bar.resetBar()));
+  }
+
+  public setInteractive(interactive: boolean) {
+    this.interactiveChildren = interactive;
   }
 }
