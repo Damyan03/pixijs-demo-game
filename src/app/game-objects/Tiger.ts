@@ -3,20 +3,24 @@ import { GameObject } from "./GameObject";
 import gsap from "gsap";
 import config from "../gameConfig.json";
 
-const { home, leap, moveDuration } = config.tiger;
+const { home, moveDuration } = config.tiger;
 
 export class Tiger extends GameObject {
   constructor() {
     super(Texture.from("tiger.png"));
   }
 
-  public async leap() {
+  public async leap(target: typeof home) {
     await Promise.all([
-      gsap.to(this.position, { duration: moveDuration, x: leap.x, y: leap.y }),
+      gsap.to(this.position, {
+        duration: moveDuration,
+        x: target.x,
+        y: target.y,
+      }),
       gsap.to(this.scale, {
         duration: moveDuration,
-        x: leap.scale,
-        y: leap.scale,
+        x: target.scale,
+        y: target.scale,
       }),
     ]);
   }

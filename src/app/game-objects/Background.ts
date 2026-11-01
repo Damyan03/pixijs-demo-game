@@ -6,10 +6,7 @@ export class Background extends Sprite {
     this.anchor.set(0.5);
   }
 
-  public resize(width: number, height: number): void {
-    this.position.set(width * 0.5, height * 0.5);
-    this.scale.set(
-      Math.max(width / this.texture.width, height / this.texture.height),
-    );
+  public coverHeight(height: number): void {
+    this.scale.set(height / this.texture.height);
   }
 }

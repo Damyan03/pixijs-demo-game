@@ -1,6 +1,7 @@
 import { Sprite } from "pixi.js";
 import { Container, RenderLayer, Texture } from "pixi.js";
 import { waitFor } from "../../../engine/utils/waitFor";
+import { engine } from "../../getEngine";
 
 import { Cage } from "../../game-objects/Cage";
 import { Tiger } from "../../game-objects/Tiger";
@@ -10,6 +11,7 @@ import { Bar } from "../../game-objects/Bar";
 
 import gsap from "gsap";
 import config from "../../gameConfig.json";
+import { computeLayout } from "./layout";
 
 type GameState = "playing" | "resetting" | "won";
 
@@ -35,18 +37,17 @@ export class MainScreen extends Container {
   constructor() {
     super();
 
-    this.background = new Background();
-    this.addChild(this.background);
-
     this.mainContainer = new Container();
     this.addChild(this.mainContainer);
+
+    this.background = new Background();
+    this.mainContainer.addChild(this.background);
 
     this.cage = new Cage((bar: Bar) => this.onBarTap(bar));
     this.mainContainer.addChild(this.cage);
 
     this.plate = new Plate();
     this.plate.scale.set(config.plate.scale);
-    this.plate.position.set(config.plate.x, config.plate.y);
     this.mainContainer.addChild(this.plate);
 
     this.tiger = new Tiger();
@@ -57,7 +58,7 @@ export class MainScreen extends Container {
     this.winText = new Sprite(Texture.from("txt.png"));
     this.winText.scale.set(0);
     this.winText.anchor.set(0.5);
-    this.winText.position.set(config.winText.x, config.winText.y);
+    this.winText.y = config.winText.y;
     this.mainContainer.addChild(this.winText);
 
     //renders the bars in front of the tiger
@@ -120,11 +121,15 @@ export class MainScreen extends Container {
     await lastBar.open();
 
     this.frontLayer.attach(this.tiger, this.winText);
-    await this.tiger.leap();
+
+    const { width, height } = engine().navigation;
+    const { tigerLeap, winTextX, winTextScale } = computeLayout(width, height);
+    this.winText.x = winTextX;
+    await this.tiger.leap(tigerLeap);
     await gsap.to(this.winText.scale, {
       duration: config.winText.showDuration,
-      x: config.winText.scale,
-      y: config.winText.scale,
+      x: winTextScale,
+      y: winTextScale,
     });
 
     //hold the win screen before resetting
@@ -143,16 +148,14 @@ export class MainScreen extends Container {
 
   /** Resize the screen, fired whenever window size changes */
   public resize(width: number, height: number) {
-    const centerX = width * 0.5;
-    const centerY = height * 0.5;
-
-    this.mainContainer.x = centerX;
-    this.mainContainer.y = centerY;
-
-    const { gameSize } = config;
-    this.mainContainer.scale.set(
-      Math.min(width / gameSize.width, height / gameSize.height),
+    const { scale, x, y, plateX, plateY, backgroundHeight } = computeLayout(
+      width,
+      height,
     );
-    this.background.resize(width, height);
+
+    this.mainContainer.scale.set(scale);
+    this.mainContainer.position.set(x, y);
+    this.plate.position.set(plateX, plateY);
+    this.background.coverHeight(backgroundHeight);
   }
 }
