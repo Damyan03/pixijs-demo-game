@@ -67,7 +67,7 @@ export class MainScreen extends Container {
 
     this.resetGame();
   }
-  
+
   private setState(state: GameState) {
     this.state = state;
     //bars only accept input while playing
@@ -121,12 +121,20 @@ export class MainScreen extends Container {
 
     this.frontLayer.attach(this.tiger, this.winText);
     await this.tiger.leap();
-    await gsap.to(this.winText.scale, { duration: config.winText.showDuration, x: config.winText.scale, y: config.winText.scale });
+    await gsap.to(this.winText.scale, {
+      duration: config.winText.showDuration,
+      x: config.winText.scale,
+      y: config.winText.scale,
+    });
 
     //hold the win screen before resetting
     await waitFor(config.winText.holdDuration);
 
-    await gsap.to(this.winText.scale, { duration: config.winText.hideDuration, x: 0, y: 0 });
+    await gsap.to(this.winText.scale, {
+      duration: config.winText.hideDuration,
+      x: 0,
+      y: 0,
+    });
     await this.tiger.returnToCage();
     this.frontLayer.detach(this.tiger, this.winText);
 
@@ -142,7 +150,9 @@ export class MainScreen extends Container {
     this.mainContainer.y = centerY;
 
     const { gameSize } = config;
-    this.mainContainer.scale.set(Math.min(width / gameSize.width, height / gameSize.height));
+    this.mainContainer.scale.set(
+      Math.min(width / gameSize.width, height / gameSize.height),
+    );
     this.background.resize(width, height);
   }
 }

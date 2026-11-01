@@ -31,7 +31,8 @@ export class Bar extends InteractableObject {
       text: `${this.id + 1}`,
       style: config.bar.labelStyle,
     });
-    this.barLabel.x = (this.sprite.width - config.bar.labelInset) * this.direction;
+    this.barLabel.x =
+      (this.sprite.width - config.bar.labelInset) * this.direction;
     this.addChild(this.barLabel);
 
     //bar shadow
@@ -50,12 +51,19 @@ export class Bar extends InteractableObject {
   public async open() {
     this.isOpen = true;
     this.cursor = "default";
-    await gsap.to(this, { duration: config.bar.openDuration, x: config.bar.openDistance * this.direction });
+    await gsap.to(this, {
+      duration: config.bar.openDuration,
+      x: config.bar.openDistance * this.direction,
+    });
   }
 
   public async close() {
     this.isOpen = false;
     this.cursor = "pointer";
-    await gsap.to(this, { duration: config.bar.closeDuration, x: 0, overwrite: "auto" });
+    await gsap.to(this, {
+      duration: config.bar.closeDuration,
+      x: 0,
+      overwrite: "auto",
+    });
   }
 }
